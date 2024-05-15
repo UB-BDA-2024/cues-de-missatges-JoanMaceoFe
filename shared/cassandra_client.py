@@ -10,3 +10,6 @@ class CassandraClient:
 
     def close(self):
         self.cluster.shutdown()
+    
+    def execute(self, query):
+        return self.get_session().execute(query)

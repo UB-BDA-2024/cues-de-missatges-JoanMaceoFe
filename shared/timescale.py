@@ -12,6 +12,7 @@ class Timescale:
             database=os.environ.get("TS_DBNAME"))
         self.cursor = self.conn.cursor()
         
+        
     def getCursor(self):
             return self.cursor
 
