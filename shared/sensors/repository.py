@@ -267,10 +267,10 @@ def get_data(redis: Session, sensor_id: int, _from: str, to: str, bucket: str, t
         query = f"""
         CREATE MATERIALIZED VIEW IF NOT EXISTS continous_aggregate_daily( velocity, temperature, humidity, battery_level, last_seen )
         WITH (timescaledb.continuous) AS
-        SELECT sum(velocity), sum(temperature), sum(humidity), sum(battery_level), time_bucket('1day', last_seen, 'UTC', TIMESTAMPTZ '2020-01-01T00:00:00Z')
+        SELECT sum(velocity), sum(temperature), sum(humidity), sum(battery_level), time_bucket('1day', last_seen, 'UTC')
         FROM sensor_data
         WHERE id = {sensor_id}
-        GROUP BY time_bucket('1day', last_seen, 'UTC', TIMESTAMPTZ '2020-01-01T00:00:00Z')
+        GROUP BY time_bucket('1day', last_seen, 'UTC')
         WITH NO DATA;
         """
         timescale.getCursor().execute(query)
