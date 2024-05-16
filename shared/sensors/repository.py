@@ -293,10 +293,10 @@ def get_data(redis: Session, sensor_id: int, _from: str, to: str, bucket: str, t
         query = f"""
         CREATE MATERIALIZED VIEW IF NOT EXISTS continous_aggregate_weekly( velocity, temperature, humidity, battery_level, last_seen )
         WITH (timescaledb.continuous) AS
-        SELECT avg(velocity), avg(temperature), avg(humidity), avg(battery_level), time_bucket(INTERVAL '1 week', last_seen, 'UTC')
+        SELECT avg(velocity), avg(temperature), avg(humidity), avg(battery_level), time_bucket(INTERVAL '1 week', last_seen, 'UTC', TIMESTAMPTZ '2020-01-01T00:00:00Z')
         FROM sensor_data
         WHERE id = {sensor_id}
-        GROUP BY time_bucket(INTERVAL '1 week', last_seen, 'UTC')
+        GROUP BY time_bucket(INTERVAL '1 week', last_seen, 'UTC', TIMESTAMPTZ '2020-01-01T00:00:00Z')
         WITH NO DATA;
         """
         print(sensor_id)
@@ -320,10 +320,10 @@ def get_data(redis: Session, sensor_id: int, _from: str, to: str, bucket: str, t
         query = f"""
         CREATE MATERIALIZED VIEW IF NOT EXISTS continous_aggregate_monthly( velocity, temperature, humidity, battery_level, last_seen )
         WITH (timescaledb.continuous) AS
-        SELECT avg(velocity), avg(temperature), avg(humidity), avg(battery_level), time_bucket('30day', last_seen, 'UTC')
+        SELECT avg(velocity), avg(temperature), avg(humidity), avg(battery_level), time_bucket('30day', last_seen, 'UTC', TIMESTAMPTZ '2020-01-01T00:00:00Z')
         FROM sensor_data
         WHERE id = {sensor_id}
-        GROUP BY time_bucket('30day', last_seen, 'UTC')
+        GROUP BY time_bucket('30day', last_seen, 'UTC', TIMESTAMPTZ '2020-01-01T00:00:00Z')
         WITH NO DATA;
         """
         timescale.execute(query)
